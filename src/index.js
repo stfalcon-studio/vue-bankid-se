@@ -36,7 +36,7 @@ export default {
   methods: {
     async getRef() {
       try {
-        const { orderRef, autoStartToken } = this.requestToken();
+        const { orderRef, autoStartToken } = await this.requestToken();
         this.orderRef = orderRef;
         this.autoStartToken = autoStartToken;
       } catch (ex) {
