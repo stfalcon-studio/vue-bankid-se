@@ -1,5 +1,11 @@
+import isMobileOfTablet from './device-type';
+import QrCode from './QrCodeStrategy';
+import Redirect from './RedirectStrategy';
+
+const sec = 1000;
+
 export default {
-  name: "BankidButton",
+  name: 'BankidButton',
 
   props: {
     requestSession: {
@@ -9,55 +15,45 @@ export default {
     requestToken: {
       type: Function,
       required: true
-    }
+    },
+    tryCount: {
+      type: Number,
+      default: 10,
+    },
+    qrDuration: {
+      type: Number,
+      default: 50,
+    },
   },
 
   data: () => ({
-    orderRef: "",
-    autoStartToken: ""
+    isMobile: false,
   }),
 
-  async created() {
-    const url = new URL(location.href);
-    const ref = url.searchParams.get("orderRef");
-
-    if (ref) {
-      try {
-        await this.requestSession(ref);
-      } catch (ex) {
-        // eslint-disable-next-line
-        console.error(ex);
-      }
-    } else {
-      this.getRef();
-    }
+  computed: {
+    RegistrationComponent() {
+      return this.isMobile ? Redirect : QrCode;
+    },
+    qrDurationSec() {
+      return this.qrDuration * sec;
+    },
   },
 
-  methods: {
-    async getRef() {
-      try {
-        const { orderRef, autoStartToken } = await this.requestToken();
-        this.orderRef = orderRef;
-        this.autoStartToken = autoStartToken;
-      } catch (ex) {
-        // eslint-disable-next-line
-        console.error(ex);
-      }
-    },
-    handleClick() {
-      window.location.href = `https://app.bankid.com/?autostarttoken=${
-        this.autoStartToken
-      }&redirect=${location.href}?orderRef=${this.orderRef}`;
-    }
+  async created() {
+    this.isMobile = isMobileOfTablet();
   },
 
   render(h) {
     return h(
-      "button",
+      'component',
       {
-        on: {
-          click: this.handleClick
-        }
+        is: this.RegistrationComponent,
+        props: {
+          requestToken: this.requestToken,
+          requestSession: this.requestSession,
+          tryCount: this.tryCount,
+          qrDuration: this.qrDurationSec,
+        },
       },
       [this.$slots.default]
     );

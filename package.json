@@ -38,5 +38,8 @@
     "parserOptions": {
       "parser": "babel-eslint"
     }
+  },
+  "dependencies": {
+    "qrcode": "1.4.1"
   }
 }
