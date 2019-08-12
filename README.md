@@ -28,7 +28,7 @@ _Note_: If you specify `tryCount = 2`, `qrDuration = 30` - it means that that QR
 
 ```html
 <template>
-  <BankIdButton
+  <BankIdLogin
     :request-session="onLogin"
     :request-token="startBankIdSession"
     :try-count="2"
@@ -37,15 +37,15 @@ _Note_: If you specify `tryCount = 2`, `qrDuration = 30` - it means that that QR
     <button type="primary">
       Login with BankId
     </button>
-  </BankIdButton>
+  </BankIdLogin>
 </template>
 
 <script>
-import BankIdButton from '@stfalcon/vue-bank-id-se';
+import BankIdLogin from '@stfalcon/vue-bank-id-se';
 
 export default {
   name: 'Auth',
-  components: { BankIdButton },
+  components: { BankIdLogin },
   methods: {
     ...mapActions('auth', ['login', 'startBankIdSession']),
     async onLogin(ref) {
