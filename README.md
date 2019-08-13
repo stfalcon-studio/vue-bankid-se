@@ -14,6 +14,8 @@ npm i @stfalcon/vue-bank-id-se
 
 It receives a component (in default slot) as an actor.
 
+It receives a component as wrapper for showing QR-code in scoped slot `qrDialog`. This scoped slot returns `imgUrl`(base64 image to insert into `img` tag), `countdownTime`(time is left to close dialog) and `closeDialog`(function which you can call to close the dialog)
+
 `requestToken: () => Promise<{ autoStartToken<string>, orderRef<string> }>` - required. Initialize BankId session at server.
 
 `requestSesstion: ({ orderRef<string> }) => Promise<any>` - required. Requires session from server by `orderRef`.
@@ -37,15 +39,20 @@ _Note_: If you specify `tryCount = 2`, `qrDuration = 30` - it means that that QR
     <button type="primary">
       Login with BankId
     </button>
+
+    <template v-slot:qrDialog="props">
+      <QrDialog v-bind="props"/>
+    </template>
   </BankIdLogin>
 </template>
 
 <script>
 import BankIdLogin from '@stfalcon/vue-bank-id-se';
+import QrDialog from '@/components/MyDialog';
 
 export default {
   name: 'Auth',
-  components: { BankIdLogin },
+  components: { BankIdLogin, QrDialog },
   methods: {
     ...mapActions('auth', ['login', 'startBankIdSession']),
     async onLogin(ref) {

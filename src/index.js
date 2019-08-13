@@ -54,6 +54,9 @@ export default {
           tryCount: this.tryCount,
           qrDuration: this.qrDurationSec,
         },
+        scopedSlots: {
+          qrDialog: this.$scopedSlots.qrDialog,
+        },
       },
       [this.$slots.default]
     );

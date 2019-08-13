@@ -1,5 +1,6 @@
 import StrategyMixin from './strategy-mixin';
-import QrCodeComponent from './QrCodeComponent';
+import QrCodeGenerator from './QrCodeGenerator';
+import DefaultPopup from './DefaultPopup';
 
 const sec = 1000;
 
@@ -21,11 +22,17 @@ export default {
 
   data: () =>({
     showQrCode: false,
+    intervalId: null,
   }),
 
   computed: {
     tryAfter() {
       return this.qrDuration / this.tryCount;
+    },
+    qrDialog() {
+      return this.$scopedSlots.qrDialog
+        ? this.$scopedSlots.qrDialog
+        : (props) => this.$createElement(DefaultPopup, { props })
     },
   },
 
@@ -43,18 +50,17 @@ export default {
       let attempt = 1;
       let success = false;
 
-      const intervalId = setInterval(async() => {
+      this.intervalId = setInterval(async() => {
         if (attempt > tryCount || !this.showQrCode || success) {
-          this.showQrCode = false;
-          return clearInterval(intervalId);
+          this.setActorState(false)
+          return null;
         }
 
         const resp = await this.requestSession(this.urlData.orderRef);
 
         if (resp) {
           success = true;
-          this.showQrCode = false;
-          clearInterval(intervalId);
+          this.setActorState(false)
           return null;
         } else {
           console.warn(`Error to require session from bankId, attempt #${attempt} from ${tryCount}`);
@@ -64,17 +70,25 @@ export default {
       }, this.tryAfter);
     },
 
+    setActorState(state) {
+      this.showQrCode = state;
+      clearInterval(this.intervalId);
+    },
+
     getBankIdAuthActor() {
       return this.showQrCode
-        ? this.$createElement(QrCodeComponent, {
+        ? this.$createElement(QrCodeGenerator, {
           props: {
             strToShow: this.url,
             visible: this.showQrCode,
             countdown: this.qrDuration,
           },
+          scopedSlots: {
+            qrDialog: this.qrDialog,
+          },
           on: {
-            'update:visible': ($event) => this.showQrCode = $event,
-          }
+            'update:visible': this.setActorState,
+          },
         })
         : '';
     },
