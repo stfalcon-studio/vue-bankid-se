@@ -18,7 +18,7 @@ It receives a component as wrapper for showing QR-code in scoped slot `qrDialog`
 
 `requestToken: () => Promise<{ autoStartToken<string>, orderRef<string> }>` - required. Initialize BankId session at server.
 
-`requestSesstion: ({ orderRef<string> }) => Promise<any>` - required. Requires session from server by `orderRef`.
+`requestSesstion: ({ orderRef<string> }) => Promise<any>` - required. Requires session from server by `orderRef`. If you want that dialog will be closed automatically then requestSesstion should return any defined value.
 
 `tryCount: Number` - optional(default 10), is used only for desktop. Number of tries to require `requestSesstion`
 

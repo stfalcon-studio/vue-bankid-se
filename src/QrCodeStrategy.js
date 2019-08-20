@@ -36,6 +36,10 @@ export default {
     },
   },
 
+  destroyed() {
+    this.setActorState(false);
+  },
+
   methods: {
     generateUrl() {
       return `bankid:///?autostarttoken=${this.urlData.autoStartToken}`;

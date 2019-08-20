@@ -35,6 +35,10 @@ export default {
     this.countdownTime = this.getFormatedTimeFrom(this.countdown);
   },
 
+  destroyed() {
+    this.closeDialog();
+  },
+
   methods: {
     getFormatedTimeFrom(duration) {
       let min = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
