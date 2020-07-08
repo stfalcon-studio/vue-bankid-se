@@ -16,8 +16,9 @@ export default {
 
   methods: {
     generateUrl({ autoStartToken: tk, orderRef: oref }) {
-      const loc = location.href;
-      return `bankid:///?autostarttoken=${tk}&redirect=${loc}?orderRef=${oref}`;
+      // const loc = location.href;
+      // return `bankid:///?autostarttoken=${tk}&redirect=${loc}?orderRef=${oref}`;
+      return `bankid:///?autostarttoken=${tk}&redirect=null`;
     },
 
     performActorForUrl(url) {
